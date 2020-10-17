@@ -1,0 +1,16 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Create a 2D Matrix</title>
+</head>
+
+<body>
+	<form action="#" th:action="@{/view}" th:object="${matrix}">
+		<p>m: <input type="number" th:field="*{m}" /></p> 
+		<p>n: <input type="number" th:field="*{n}" /></p> 
+		<p>Precision Threshold: <input type="number" th:field="*{precisionThreshold}" /></p> 
+		<p><input type="submit" value="Submit" /></p>
+	</form>
+</body>
+
+</html>
