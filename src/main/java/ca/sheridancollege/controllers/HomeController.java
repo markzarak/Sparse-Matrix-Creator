@@ -6,6 +6,7 @@
 
 package ca.sheridancollege.controllers;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -35,7 +36,7 @@ public class HomeController {
 		model.addAttribute("matrix", new Matrix());
 		Random rand = new Random();
 
-		// Create empty sparse matrix
+		// Create empty array for sparse matrix
 		double[][] sparseMatrix = new double[mRows][nColumns];
 
 		System.out.println("***Sparse Matrix A***");
@@ -43,13 +44,15 @@ public class HomeController {
 		for (int floor = 0; floor < mRows; ++floor) {
 			for (int room = 0; room < nColumns; ++room) {
 				// Probability of adding 0 based on user threshold value
-				double randomNumber = rand.nextDouble();
-				if (randomNumber <= precisionThreshold) {
+				double probability = rand.nextDouble();
+				if (probability <= precisionThreshold) {
 					sparseMatrix[floor][room] = 0;
-					System.out.print(String.format("%.0f. ", +sparseMatrix[floor][room]));
+					DecimalFormat decimalFormat=new DecimalFormat("#");
+					System.out.print(decimalFormat.format(sparseMatrix[floor][room]) + " ");
 				} else {
 					// If 0 was not added, then add randomly generated number
-					sparseMatrix[floor][room] = rangeMin + (rangeMax - rangeMin) * rand.nextDouble();
+					double randomNumber = rangeMin + (rangeMax - rangeMin) * rand.nextDouble();
+					sparseMatrix[floor][room] = randomNumber;
 					System.out.print(String.format("%.0f. ", +sparseMatrix[floor][room]));
 				}
 			}
@@ -57,11 +60,9 @@ public class HomeController {
 		}
 		System.out.println("");
 		
-		// Add sparseMatrix array to model
-		model.addAttribute("generatedElements", sparseMatrix);
-
+		// Add sparseMatrix array to model to save data
+//		model.addAttribute("generatedElements", sparseMatrix);
 		// Print sparse matrix to text file
-
 
 		// Create array V
 		System.out.println("***Array V***");
@@ -73,11 +74,11 @@ public class HomeController {
 				if (currentNum != 0 && (currentNum >= 1 || currentNum <= -1)) {
 					arrayV.add(currentNum);
 				}
-				// Round up and add number to arrayV if not zero, below 1, and above 0 
+				// Round up if not zero, below 1, and above 0 
 				if (currentNum != 0 && (currentNum < 1 && currentNum > 0)) {
 					arrayV.add(Math.ceil(currentNum));
 				}
-				// Round down and add number to arrayV if not zero, less than 0, and above -1
+				// Round down if not zero, less than 0, and above -1
 				if (currentNum != 0 && (currentNum < 0 && currentNum > -1)) {
 					arrayV.add(Math.floor(currentNum));
 				}
@@ -91,9 +92,10 @@ public class HomeController {
 		System.out.println("");
 
 		// Create array J
+		System.out.println("");
 		System.out.println("***Array J***");
 		ArrayList<Integer> arrayJ = new ArrayList<>();
-		// indexJ is used to count from the beginning of each line in sparseMatrix
+		// indexJ is used to keep track of the beginning of each line in sparseMatrix
 		int indexJ = 0;
 		for (int floor = 0; floor < sparseMatrix.length; ++floor) {
 			for (int room = 0; room < sparseMatrix[floor].length; ++room) {
@@ -113,25 +115,32 @@ public class HomeController {
 		System.out.println("");
 
 		// Create array I
-//		System.out.println("***Array I***");
-//		ArrayList<Integer> arrayI = new ArrayList<>();
-//		int indexI = 0;
-//		for (int floor = 0; floor < sparseMatrix.length; ++floor) {
-//			for (int room = 0; room < sparseMatrix[floor].length; ++room) {
-//				boolean found = false;
-//				if (sparseMatrix[floor][room] != 0 && found == false) {
-//					arrayI.add(indexI);
-//					found = true;
-//				}
-//				indexI++;
-//			}
-//		}
-//
-//		// Print array I
-//		for (int i = 0; i < arrayI.size(); ++i) {
-//			System.out.print(arrayI.get(i) + " ");
-//		}
-//		System.out.println("");
+		System.out.println("");
+		System.out.println("***Array I***");
+		ArrayList<Integer> arrayI = new ArrayList<>();
+		// indexOfArrayV is used to keep track of the non zero-numbers added to Array V
+		int indexOfArrayV = 0;
+		for (int floor = 0; floor < sparseMatrix.length; ++floor) {
+			boolean found = false;
+			for (int room = 0; room < sparseMatrix[floor].length; ++room) {
+				if (sparseMatrix[floor][room] != 0) {
+					// If a zero-number has been found, allow only first entry per row from sparseMatrix
+					if (found == false) {
+					arrayI.add(indexOfArrayV);
+					found = true;
+					}
+					indexOfArrayV++;
+				}
+			}
+		}
+		// Point last element in arrayI to the start of a fictitious (m + 1) row
+		arrayI.add(indexOfArrayV);
+
+		// Print array I
+		for (int i = 0; i < arrayI.size(); ++i) {
+			System.out.print(arrayI.get(i) + " ");
+		}
+		System.out.println("");
 
 		return "home.html";
 	}
