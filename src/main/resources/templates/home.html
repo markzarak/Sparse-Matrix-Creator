@@ -1,16 +1,27 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<title>Create a 2D Matrix</title>
+<title>Create a Sparse Matrix</title>
 </head>
 
 <body>
 	<form action="#" th:action="@{/view}" th:object="${matrix}">
-		<p>m: <input type="number" th:field="*{m}" /></p> 
-		<p>n: <input type="number" th:field="*{n}" /></p> 
-		<p>Precision Threshold: <input type="number" th:field="*{precisionThreshold}" /></p> 
+		<p>Minimum Range: <input type="number" step="0.01" th:field="*{rangeMin}" /></p> 
+		<p>Maximum Range: <input type="number" step="0.01" th:field="*{rangeMax}" /></p> 
+		<p>Rows: <input type="number" min="0" th:field="*{mRows}" /></p> 
+		<p>Columns: <input type="number" min="0" th:field="*{nColumns}" /></p> 
+		<p>Precision Threshold: <input type="number" min="0.0" max="1.0" step="0.1" th:field="*{precisionThreshold}" /></p> 
+		<p>Array Selection: <fieldset>
+		<input type="checkbox" id="v" name="compressedSparseRow" value="v" />
+		<label for="v">V</label>
+		<input type="checkbox" id="j" name="compressedSparseRow" value="j" /> 
+		<label for="j">J</label>
+		<input type="checkbox" id="i" name="compressedSparseRow" value="i" />
+		<label for="i">I</label>
+		</fieldset>
 		<p><input type="submit" value="Submit" /></p>
-	</form>
+		<p><input type="reset" /></p>
+	</form>	
 </body>
 
 </html>
