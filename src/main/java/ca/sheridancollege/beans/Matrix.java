@@ -7,7 +7,6 @@
 package ca.sheridancollege.beans;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
