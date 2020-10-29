@@ -10,6 +10,12 @@
 </head>
 
 <body>
+	<div class="fullscreen-bg">
+	    <video loop muted autoplay class="fullscreen-bg__video">
+	        <source th:src="@{/video/matrix.mp4}" type="video/mp4">
+	    </video>
+	</div>
+	
 	<header>
 		<img class="title" th:src="@{/images/title.png}" height="150px" alt="Sparse Matrix Creator" />
 	</header>
@@ -31,11 +37,11 @@
 				<p>Columns: <input class="input-field" type="number" min="0" th:field="*{nColumns}" /></p> 
 				<p>Precision Threshold: <input class="input-field" type="number" min="0.0" max="1.0" step="0.1" th:field="*{precisionThreshold}" /></p> 
 					<p>Array Selection:
-					<input type="checkbox" name="compressedSparseRow" value="v" />
+					<input type="checkbox" name="compressedSparseRow" value="v" checked />
 					<label for="v">V</label>
-					<input type="checkbox" name="compressedSparseRow" value="j" /> 
+					<input type="checkbox" name="compressedSparseRow" value="j" checked /> 
 					<label for="j">J</label>
-					<input type="checkbox" name="compressedSparseRow" value="i" />
+					<input type="checkbox" name="compressedSparseRow" value="i" checked />
 					<label for="i">I</label>
 					</p>
 			</section>
@@ -45,15 +51,15 @@
 		<section class="user-output">
 			<table>
 				<tr>
-					<th>Array V</th>
+					<th th:text="${arrayVName}"></th>
 				</tr>
-		     	<tr th:each="element:${arrayVAttribute}">
+		     	<tr th:each="element:${arrayV}">
 		       		<td th:text="${#numbers.formatDecimal(element,0,0)}"></td>
 		  	    </tr>	    
 			</table>
 			<table>
 				<tr>
-					<th>Array J</th>
+					<th th:text="${arrayJName}"></th>
 				</tr>
 		     	<tr th:each="element:${arrayJAttribute}">
 		       		<td th:text="${element}"></td>
@@ -61,7 +67,7 @@
 			</table>
 			<table>
 				<tr>
-					<th>Array I</th>
+					<th th:text="${arrayIName}"></th>
 				</tr>
 		     	<tr th:each="element:${arrayIAttribute}">
 		       		<td th:text="${element}"></td>

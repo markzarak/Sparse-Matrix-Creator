@@ -22,6 +22,6 @@ public class Matrix implements Serializable {
 	private double rangeMax;
 	private int mRows;
 	private int nColumns;
-	double precisionThreshold;
+	private double precisionThreshold;
 
 }

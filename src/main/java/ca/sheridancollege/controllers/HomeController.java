@@ -34,7 +34,7 @@ public class HomeController {
 		return "home.html";
 	}
 
-	// Create sparse matrix
+	// Create sparse matrix and display associated arrays
 	@GetMapping("/view")
 	public String doAddSparseMatrix(Model model, @ModelAttribute Matrix matrix, @RequestParam double rangeMin,
 			@RequestParam double rangeMax, @RequestParam int mRows, @RequestParam int nColumns,
@@ -42,7 +42,7 @@ public class HomeController {
 
 		// Assign default row and column values for array if none given by user
 		boolean displayDefault = false;
-		if (mRows == 0 && nColumns == 0) {
+		if (mRows == 0 && nColumns == 0 && rangeMin == 0 && rangeMax == 0) {
 			mRows = 4;
 			nColumns = 5;
 			displayDefault = true;
@@ -51,7 +51,7 @@ public class HomeController {
 		// Create empty array for sparse matrix
 		double[][] sparseMatrix = new double[mRows][nColumns];
 
-		// Create default sparse matrix from text file if user leaves rows and columns as 0
+		// Create default sparse matrix from text file if user does not enter any values
 		if (displayDefault) {
 			try {
 				File myObj = new File("SparseMatrixInput.txt");
@@ -73,7 +73,7 @@ public class HomeController {
 				myReader.close();
 				System.out.println("Successfully read data from SparseMatrixInput.txt");
 			} catch (FileNotFoundException e) {
-				System.out.println("An error occurred.");
+				System.out.println("An error reading data from SparseMatrixInput.txt occurred.");
 				e.printStackTrace();
 			}
 		} else {
@@ -113,13 +113,14 @@ public class HomeController {
 			output.close();
 			System.out.println("Successfully wrote data to SparseMatrixOutput.txt");
 		} catch (IOException e) {
-			System.out.println("An error occurred.");
+			System.out.println("An error outputting data to SparseMatrixOutput.txt occurred.");
 			e.printStackTrace();
 		}
 
 		// Create array based on checkbox selection:
 		// Create array V
 		if (compressedSparseRow.contains("v")) {
+			String arrayVName = "Array V";
 			ArrayList<Double> arrayV = new ArrayList<>();
 			for (int floor = 0; floor < sparseMatrix.length; ++floor) {
 				for (int room = 0; room < sparseMatrix[floor].length; ++room) {
@@ -139,11 +140,13 @@ public class HomeController {
 				}
 			}
 			// Add array V to model
-			model.addAttribute("arrayVAttribute", arrayV);
+			model.addAttribute("arrayVName", arrayVName);
+			model.addAttribute("arrayV", arrayV);
 		}
-		
+
 		// Create array J
 		if (compressedSparseRow.contains("j")) {
+			String arrayJName = "Array J";
 			ArrayList<Integer> arrayJ = new ArrayList<>();
 			// indexJ is used to keep track of the beginning of each line in sparseMatrix
 			int indexJ = 0;
@@ -158,11 +161,13 @@ public class HomeController {
 				indexJ = 0;
 			}
 			// Add array J to model
+			model.addAttribute("arrayJName", arrayJName);
 			model.addAttribute("arrayJAttribute", arrayJ);
 		}
-		
+
 		// Create array I
 		if (compressedSparseRow.contains("i")) {
+			String arrayIName = "Array I";
 			ArrayList<Integer> arrayI = new ArrayList<>();
 			// indexOfArrayV is used to keep track of the non zero-numbers added to Array V
 			int indexOfArrayV = 0;
@@ -183,6 +188,7 @@ public class HomeController {
 			// Point last element in arrayI to the start of a fictitious (m + 1) row
 			arrayI.add(indexOfArrayV);
 			// Add array I to model
+			model.addAttribute("arrayIName", arrayIName);
 			model.addAttribute("arrayIAttribute", arrayI);
 		}
 
