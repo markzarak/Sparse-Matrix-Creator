@@ -191,8 +191,6 @@ public class HomeController {
 			model.addAttribute("arrayIName", arrayIName);
 			model.addAttribute("arrayIAttribute", arrayI);
 		}
-
 		return "home.html";
 	}
-
 }
